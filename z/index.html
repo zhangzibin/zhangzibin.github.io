@@ -44,15 +44,16 @@
 
 <body>
     <div class="content">
-        <h2>ZHANG.NANTING & ZHANG.ZIBIN，我们已经在一起了</h2>
+        <h2>ZHANG.NANTING<br>&<br>ZHANG.ZIBIN<br>我们已经在一起了</h2>
         <div class="timer">
-            <b id="d"></b> Days <b id="h"></b> Hours <b id="m"></b> Minutes <b id="s"></b> Seconds
+            <b id="d"></b> Days <b id="h"></b> Hours
+            <br>
+            <b id="m"></b> Minutes <b id="s"></b> Seconds
         </div>
     </div>
 
     <script>
         function timer() {
-          // var start = new Date(2019, 8, 24);
           var start = new Date('2019-08-24T14:30:00');
           var t = new Date() - start;
           var h = ~~(t / 1000 / 60 / 60 % 24);
