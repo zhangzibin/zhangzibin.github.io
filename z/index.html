@@ -3,10 +3,9 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta name="renderer" content="webkit">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
     <title>Z&Z</title>
     <style>
         body {
@@ -15,11 +14,17 @@
             background-image: url('https://raw.githubusercontent.com/we11cheng/we11cheng.github.io/master/bg.jpg');
             font-size: 85%;
             margin: 0;
+            /* 背景图适配 */
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
         }
         
         h2 {
             font-size: 220%;
             font-weight: 400;
+            color: #333;
+            margin: 0.5em 0;
         }
         
         .content {
@@ -28,16 +33,21 @@
             top: 40%;
             transform: translate(0, -50%);
             text-align: center;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 2em 0;
         }
         
         .timer {
-            font-size: 180%;
-            line-height: 1.5;
+            font-size: 200%; /* 放大字号，突出年数和天数 */
+            line-height: 1.8;
             margin: 1em 0;
+            color: #555;
         }
         
         .timer b {
             color: rgb(253, 99, 125);
+            font-weight: 600;
+            font-size: 120%; /* 重点数字再放大 */
         }
     </style>
 </head>
@@ -46,36 +56,48 @@
     <div class="content">
         <h2>ZHANG.NANTING<br>&<br>ZHANG.ZIBIN<br>我们已经在一起了</h2>
         <div class="timer">
-            <b id="d"></b> Days <b id="h"></b> Hours
-            <br>
-            <b id="m"></b> Minutes <b id="s"></b> Seconds
+            <b id="y"></b> 年 
+            <b id="d"></b> 天
         </div>
     </div>
 
     <script>
-        function timer() {
-          var start = new Date('2019-08-24T14:40:00');
-          var t = new Date() - start;
-          var h = ~~(t / 1000 / 60 / 60 % 24);
-          if (h < 10) {
-            h = "0" + h;
-          }
-          var m = ~~(t / 1000 / 60 % 60);
-          if (m < 10) {
-            m = "0" + m;
-          }
-          var s = ~~(t / 1000 % 60);
-          if (s < 10) {
-            s = "0" + s;
-          }
-          document.getElementById('d').innerHTML = ~~(t / 1000 / 60 / 60 / 24);
-          document.getElementById('h').innerHTML = h;
-          document.getElementById('m').innerHTML = m;
-          document.getElementById('s').innerHTML = s;
+        // 起始时间（你们在一起的时间点）
+        const LOVE_START_TIME = new Date('2019-08-24T14:40:00');
+
+        // 核心计算函数：计算年数和剩余天数
+        function updateLoveTimer() {
+            const now = new Date();
+            const startYear = LOVE_START_TIME.getFullYear();
+            const startMonth = LOVE_START_TIME.getMonth();
+            const startDay = LOVE_START_TIME.getDate();
+
+            // 计算总天数差
+            const timeDifference = now - LOVE_START_TIME;
+            const totalDays = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+
+            // 计算完整年数（按自然年计算，考虑闰年）
+            let years = now.getFullYear() - startYear;
+            // 检查今年的纪念日是否还没到，没到则年数减1
+            const anniversaryThisYear = new Date(now.getFullYear(), startMonth, startDay);
+            if (now < anniversaryThisYear) {
+                years--;
+            }
+
+            // 计算扣除完整年数后的剩余天数
+            // 先算出第N年的纪念日日期
+            const lastAnniversary = new Date(now.getFullYear() - (years === 0 ? 0 : 1), startMonth, startDay);
+            const daysSinceLastAnniversary = Math.floor((now - lastAnniversary) / (1000 * 60 * 60 * 24));
+
+            // 更新页面显示
+            document.getElementById('y').textContent = years;
+            document.getElementById('d').textContent = daysSinceLastAnniversary;
         }
-        timer();
-        setInterval(timer, 1000);
+
+        // 初始化执行
+        updateLoveTimer();
+        // 每小时更新一次（年和天的变化频率低，无需每秒更新）
+        setInterval(updateLoveTimer, 3600000);
     </script>
 </body>
-
 </html>
